@@ -1,0 +1,21 @@
+# Environment
+.env
+
+# Virtual environments
+.venv/
+
+#Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+*.egg-info/
+build/
+dist/
+
+
+# Local config overrides
+config/config.yaml
+
+# Editors / OS
+.vscode/
