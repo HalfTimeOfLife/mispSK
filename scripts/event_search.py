@@ -2,39 +2,6 @@ import argparse
 from mispsk.client import MispClient
 from mispsk.utils import extract_summary, format_output
 
-from pymisp import MISPEvent
-    
-def get_event_by_id(misp, event_id):
-    """Retrieve a single MISP event by its ID.
-
-    Args:
-        misp (PyMISP): The connected PyMISP client.
-        event_id (int): The event ID to look up.
-
-    Returns:
-        list[MISPEvent]: A list containing the matching event, or an empty
-            list if no event was found.
-    """
-    event = misp.get_event(event_id, pythonify=True)
-    if not isinstance(event, MISPEvent):
-        return []
-    return [event]
-
-def get_events_by_ioc(misp, ioc_value):
-    """Search for MISP events containing a given IOC value.
-
-    Args:
-        misp (PyMISP): The connected PyMISP client.
-        ioc_value (str): The IOC value to search for.
-
-    Returns:
-        list[MISPEvent]: A list of matching events (possibly empty).
-    """
-    events = misp.search(value=ioc_value, controller='events', pythonify=True)
-    return events
-    
-
-
 def main():
     parser = argparse.ArgumentParser(
         prog="event_search.py",
@@ -53,9 +20,10 @@ def main():
     events = []
     
     if args.id:
-        events = get_event_by_id(misp, args.id)
+        event = client.get_event_by_id(args.id)
+        events = [event] if event else []
     else:
-        events = get_events_by_ioc(misp, args.ioc)
+        events = client.get_events_by_ioc(args.ioc)
         
     if not events:
         if args.id:

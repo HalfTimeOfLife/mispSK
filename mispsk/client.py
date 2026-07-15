@@ -1,6 +1,7 @@
-from pymisp import PyMISP, PyMISPError
+from pymisp import PyMISP, PyMISPError, MISPEvent
 import os
 from dotenv import load_dotenv
+
 
 class MispClient:
     """Wrapper around PyMISP that handles configuration loading, validation,
@@ -65,3 +66,29 @@ class MispClient:
             PyMISP: The active PyMISP client instance.
         """
         return self.misp
+    
+    def get_event_by_id(self, event_id):
+        """Retrieve a single MISP event by its ID.
+
+        Args:
+            event_id (int): The event ID to look up.
+
+        Returns:
+            MISPEvent or None: The matching event, or None if no event
+                was found for that ID.
+        """
+        event = self.misp.get_event(event_id, pythonify=True)
+        if not isinstance(event, MISPEvent):
+            return None
+        return event
+    
+    def get_events_by_ioc(self, ioc_value):
+        """Search for MISP events containing a given IOC value.
+
+        Args:
+            ioc_value (str): The IOC value to search for.
+
+        Returns:
+            list[MISPEvent]: A list of matching events (possibly empty).
+        """
+        return self.misp.search(value=ioc_value, controller='events', pythonify=True)
