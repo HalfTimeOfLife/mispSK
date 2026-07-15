@@ -8,8 +8,8 @@ A collection of Python scripts automating operations on MISP instances (via PyMI
  
 | Script | Description | Status |
 |---|---|---|
-| `event_search.py` | Fast event/IOC lookup and summary | WIP |
-| `ioc_enrich.py` | Hash/IP enrichment (VirusTotal, AbuseIPDB) | Planned |
+| `event_search.py` | Fast event/IOC lookup and summary | UP |
+| `ioc_enrich.py` | Hash/IP enrichment (VirusTotal, AbuseIPDB) | UP |
 | `feed_health.py` | Feed sync/freshness check | Planned |
 | `export_attack_layer.py` | Export to ATT&CK Navigator layer JSON | Planned |
 | `export_splunk.py` | Export to Splunk-ingestible format | Planned |
@@ -25,20 +25,28 @@ See [ROADMAP.md](ROADMAP.md) for release details.
  
 ```
 mispSK/
-├── mispsk/
+├── mispsk
+│   ├── __init__.py
 │   ├── client.py
-│   ├── utils.py
-│   └── __init__.py
-├── scripts/
-│   └── event_search.py
-├── tests/
-│   └── test_event_search.py
+│   ├── enrichers.py
+│   ├── enrichment.py
+│   └── utils.py
+├── scripts
+│   ├── event_search.py
+│   └── ioc_enrich.py
+├── tests
+│   ├── conftest.py
+│   ├── test_client.py
+│   ├── test_enrichers.py
+│   ├── test_enrichment.py
+│   └── test_utils.py
 ├── .env.example
 ├── .gitignore
+├── CHANGELOG.md
 ├── LICENSE
-├── pyproject.toml
 ├── README.md
 ├── ROADMAP.md
+├── pyproject.toml
 └── requirements.txt
 ```
 
@@ -82,6 +90,8 @@ MISP_VERIFY_SSL=true
 
 VT_API_KEY=your-virustotal-api-key
 ABUSEIPDB_API_KEY=your-abuseipdb-api-key
+
+VT_RATE_LIMIT_DELAY=15
 ```
 
 ---
@@ -109,6 +119,28 @@ python scripts/event_search.py --ioc <IOC_VALUE> --output json
 ```
 
 > The output format is `table` by default.
+
+### ioc_enrich.py
+
+#### Enrich an event's hash/IP attributes
+
+```bash
+python scripts/ioc_enrich.py --id 1234
+```
+
+#### Preview changes without writing to MISP
+
+```bash
+python scripts/ioc_enrich.py --id 1234 --dry-run
+```
+
+#### Adjust AbuseIPDB report freshness window
+
+```bash
+python scripts/ioc_enrich.py --id 1234 --max-age-days 30
+```
+
+> Requires at least one of `VT_API_KEY` or `ABUSEIPDB_API_KEY` to be set in `.env`. If only one is configured, the corresponding attribute type (hashes or IPs) is skipped with a warning.
 
 ---
 

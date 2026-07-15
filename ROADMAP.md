@@ -2,13 +2,6 @@
 
 ---
 
-## v0.2 - IOC Enrichment
-- `ioc_enrich.py`: hash lookup via VirusTotal, IP lookup via AbuseIPDB
-- Writes enrichment results back as MISP attribute comments/tags
-- `--dry-run` support
-
----
-
 ## v0.3 - Feed Health Check
 - `feed_health.py`: reports last-sync timestamp and recent event volume per configured feed
 - Flags feeds inactive beyond a configurable threshold (`--max-age-days`)
@@ -53,7 +46,7 @@
 | Version | Script(s) | Status |
 |---|---|---|
 | v0.1 | `event_search.py` | Shipped |
-| v0.2 | `ioc_enrich.py` | Planned |
+| v0.2 | `ioc_enrich.py` | Shipped |
 | v0.3 | `feed_health.py` | Planned |
 | v0.4 | `export_attack_layer.py` | Planned |
 | v0.5 | `export_splunk.py`, `export_yara.py` | Planned |
