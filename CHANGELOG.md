@@ -41,3 +41,18 @@ All notable changes to mispSK are documented here. Format follows [Keep a Change
 - Improved enrichment workflow reliability with IOC lookup caching
 
 ---
+
+## [0.2.1] - 2026-07-15
+
+### Fixed
+- `mispsk/utils.py`: corrected composite attribute handling (`filename|md5`, `ip-src|port`, etc.) — hash/IP value is now extracted from the correct segment (position varies by type), fixing a bug where port numbers were sent to AbuseIPDB as IP addresses (422 errors)
+- `mispsk/enrichment.py`: comment and tag updates are now independent — a changed comment no longer forces an unnecessary tag re-application, and vice versa
+- `mispsk/enrichment.py`: unexpected HTTP errors (5xx) from VirusTotal/AbuseIPDB now stop enrichment gracefully instead of raising an unhandled traceback
+- `mispsk/client.py`: connection error message translated to English for consistency
+
+### Added
+- `mispsk/utils.py`: `extract_ioc_value`, `COMPOSITE_HASH_TYPES`, `COMPOSITE_IP_TYPES`, `COMPOSITE_IOC_POSITION`
+- `requirements-dev.txt`: separated dev-only dependencies (`pytest`, `requests-mock`) from runtime requirements
+- Test coverage for composite attribute extraction and caching
+
+---

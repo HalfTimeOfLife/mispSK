@@ -73,6 +73,12 @@ pip install -r requirements.txt
 pip install -e .
 ```
 
+To run tests :
+
+```bash
+pip install -r requirements-dev.txt
+```
+
 ---
 
 ## Configuration
@@ -141,6 +147,8 @@ python scripts/ioc_enrich.py --id 1234 --max-age-days 30
 ```
 
 > Requires at least one of `VT_API_KEY` or `ABUSEIPDB_API_KEY` to be set in `.env`. If only one is configured, the corresponding attribute type (hashes or IPs) is skipped with a warning.
+
+> Composite attribute types are also supported: `filename|md5`, `filename|sha1`, `filename|sha256`, `ip-src|port`, and `ip-dst|port`. The hash/IP portion is automatically extracted for lookup, while the full value is still shown in the output.
 
 ---
 
