@@ -13,7 +13,7 @@ All notable changes to mispSK are documented here. Format follows [Keep a Change
 - `mispsk/client.py`: shared `MispClient` wrapper handling config loading, validation, and connection to a MISP instance
 - `mispsk/utils.py`: shared summary extraction and output formatting logic
 - `pyproject.toml` for editable install (`pip install -e .`)
-- Unit tests covering `_get_tlp`, `_get_attack_tags`, `extract_summary`, and `format_output`
+- Unit tests covering `_get_tlp`, `get_attack_tags`, `extract_summary`, and `format_output`
 
 ---
 
@@ -72,3 +72,19 @@ All notable changes to mispSK are documented here. Format follows [Keep a Change
 - Sync freshness (`last_sync`) is only resolvable for `fixed_event` feeds. For all other feeds (`misp`/`csv`/`freetext` without a reused event), MISP exposes no reliable "last successful fetch" signal via PyMISP:
   - `event.timestamp` reflects the source's original publish date
   - `search_logs()` does not journal feed fetches
+
+---
+
+## [0.4] - 2026-07-18
+
+### Added
+- `export_attack_layer.py`: export one or more MISP events' ATT&CK tags to an ATT&CK Navigator layer JSON file
+- `mispsk/attack_layer.py`: `extract_technique_id`, `compute_score`, `aggregate_attack_tags`, `build_navigator_layer`
+- `mispsk/client.py`: `get_events_by_ids` method for batch event fetching, skipping invalid IDs with a warning
+- `tests/test_attack_layer.py`: unit tests covering technique ID extraction, score normalization, cross-event aggregation, and layer construction
+
+### Changed
+- `mispsk/utils.py`: `_get_attack_tags` renamed to `get_attack_tags` (now shared between `event_search.py` and `attack_layer.py`)
+
+### Known limitation
+- Technique ID mapping relies on the `external_id` field in `cluster.meta` (populated by MISP's official `mitre-attack` galaxy sync). Clusters missing this field are skipped with a warning rather than failing the whole export.

@@ -13,7 +13,7 @@ A collection of Python scripts automating operations on MISP instances (via PyMI
 | `event_search.py` | Fast event/IOC lookup and summary | UP |
 | `ioc_enrich.py` | Hash/IP enrichment (VirusTotal, AbuseIPDB) | UP |
 | `feed_health.py` | Feed sync/freshness check | UP |
-| `export_attack_layer.py` | Export to ATT&CK Navigator layer JSON | Planned |
+| `export_attack_layer.py` | Export to ATT&CK Navigator layer JSON | UP |
 | `export_splunk.py` | Export to Splunk-ingestible format | Planned |
 | `export_yara.py` | Generate YARA rules from attributes | Planned |
 | `taxonomy_check.py` | Event quality/taxonomy compliance check | Planned |
@@ -29,6 +29,7 @@ See [ROADMAP.md](ROADMAP.md) for release details.
 mispSK/
 ├── mispsk
 │   ├── __init__.py
+│   ├── attack_layer.py
 │   ├── client.py
 │   ├── enrichers.py
 │   ├── enrichment.py
@@ -36,10 +37,12 @@ mispSK/
 │   └── utils.py
 ├── scripts
 │   ├── event_search.py
+│   ├── export_attack_layer.py
 │   ├── feed_health.py
 │   └── ioc_enrich.py
 ├── tests
 │   ├── conftest.py
+│   ├── test_attack_layer.py
 │   ├── test_client.py
 │   ├── test_enrichers.py
 │   ├── test_enrichment.py
@@ -171,6 +174,28 @@ python scripts/feed_health.py --max-age-days 7
 ```
 
 > Sync freshness is only determinable for `fixed_event` feeds - MISP exposes no reliable last-fetch signal for other feed types. Those are reported with status `unknown`, alongside a total count of matched events (matched by provider, not time-windowed).
+
+### export_attack_layer.py
+
+#### Export ATT&CK layer
+
+```bash
+python scripts/export_attack_layer.py --ids <ID_1> <ID_2> <ID_3>  --output layer.json
+```
+
+#### Export ATT&CK layer with name
+
+```bash
+python scripts/export_attack_layer.py --ids <ID_1> <ID_2> <ID_3>  --output layer.json --name "Layer Name"
+```
+
+#### Export ATT&CK layer with domain
+
+```bash
+python scripts/export_attack_layer.py --ids <ID_1> <ID_2> <ID_3>  --output layer.json --domain "mobile-attack"
+```
+
+> By default, `--domain` is `enterprise-attack`.
 
 ---
 

@@ -2,18 +2,6 @@
 
 ---
 
-## v0.3 - Feed Health Check
-- `feed_health.py`: reports last-sync timestamp and recent event volume per configured feed
-- Flags feeds inactive beyond a configurable threshold (`--max-age-days`)
-
----
-
-## v0.4 - ATT&CK Layer Export
-- `export_attack_layer.py`: exports one or more events' ATT&CK tags to a Navigator layer JSON
-- Direct interoperability with attackmap (output feeds straight into attackmap's heatmap generation)
-
----
-
 ## v0.5 - Splunk & YARA Export
 - `export_splunk.py`: exports attributes to a Splunk-ingestible CSV/CIM format
 - `export_yara.py`: generates YARA rules from filename/pattern-type attributes
@@ -47,8 +35,8 @@
 |---|---|---|
 | v0.1 | `event_search.py` | Shipped |
 | v0.2 | `ioc_enrich.py` | Shipped |
-| v0.3 | `feed_health.py` | Planned |
-| v0.4 | `export_attack_layer.py` | Planned |
+| v0.3 | `feed_health.py` | Shipped |
+| v0.4 | `export_attack_layer.py` | Shipped |
 | v0.5 | `export_splunk.py`, `export_yara.py` | Planned |
 | v0.6 | `taxonomy_check.py` | Planned |
 | v0.7 | `event_import.py` | Planned |
