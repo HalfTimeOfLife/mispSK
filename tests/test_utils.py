@@ -9,7 +9,7 @@ from mispsk.utils import (
     extract_summary,
     format_output,
     _get_tlp,
-    _get_attack_tags,
+    get_attack_tags,
     classify_vt_result,
     classify_abuseipdb_result,
     _classify_by_threshold,
@@ -259,7 +259,7 @@ def test_get_tlp_returns_none_when_absent():
 
 
 # ---------------------------------------------------------------------------
-# --- _get_attack_tags ---
+# --- get_attack_tags ---
 # ---------------------------------------------------------------------------
 
 
@@ -269,7 +269,7 @@ def test_get_attack_tags_returns_matching_clusters():
     """
     event = _build_event_with_galaxy("mitre-attack", "Phishing - T1566")
 
-    assert _get_attack_tags(event) == ["Phishing - T1566"]
+    assert get_attack_tags(event) == ["Phishing - T1566"]
 
 
 def test_get_attack_tags_ignores_non_mitre_attack_galaxies():
@@ -278,7 +278,7 @@ def test_get_attack_tags_ignores_non_mitre_attack_galaxies():
     """
     event = _build_event_with_galaxy("misp", "Some Other Cluster")
 
-    assert _get_attack_tags(event) == []
+    assert get_attack_tags(event) == []
 
 
 def test_get_attack_tags_returns_empty_list_when_no_galaxies():
@@ -288,7 +288,7 @@ def test_get_attack_tags_returns_empty_list_when_no_galaxies():
     event = MISPEvent()
     event.Galaxy = []
 
-    assert _get_attack_tags(event) == []
+    assert get_attack_tags(event) == []
 
 
 # ---------------------------------------------------------------------------
