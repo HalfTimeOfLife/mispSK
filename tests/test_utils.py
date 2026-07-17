@@ -1,9 +1,11 @@
 import json
-
 import pytest
+
+from datetime import datetime, timedelta, timezone
 from pymisp import MISPEvent, MISPGalaxy, MISPGalaxyCluster, MISPOrganisation
 
 from mispsk.utils import (
+    get_age,
     extract_summary,
     format_output,
     _get_tlp,
@@ -15,6 +17,7 @@ from mispsk.utils import (
     build_enrichment_tag,
     build_tree_output,
     extract_ioc_value,
+    build_feed_report,
     COMPOSITE_HASH_TYPES,
     COMPOSITE_IP_TYPES,
     COMPOSITE_IOC_POSITION,
@@ -225,7 +228,7 @@ def test_extract_ioc_value_handles_all_composite_hash_variants(
 
 def test_composite_type_sets_match_position_table():
     """Every composite hash/IP type must have a corresponding entry in
-    COMPOSITE_IOC_POSITION, and vice versa — prevents silently mis-parsing
+    COMPOSITE_IOC_POSITION, and vice versa - prevents silently mis-parsing
     a newly added composite type that was forgotten in one of the tables."""
 
     declared_types = COMPOSITE_HASH_TYPES | COMPOSITE_IP_TYPES
@@ -731,3 +734,137 @@ def test_build_tree_output_omits_dry_run_marker_when_false(capsys):
 
     captured = capsys.readouterr()
     assert "[DRY-RUN] No changes written to MISP" not in captured.out
+
+
+# ---------------------------------------------------------------------------
+# --- get_age ---
+# ---------------------------------------------------------------------------
+
+
+def test_get_age_computes_days_from_datetime():
+    """A datetime object 5 days in the past should return an age of 5."""
+    five_days_ago = datetime.now(timezone.utc) - timedelta(days=5)
+
+    result = get_age(five_days_ago)
+
+    assert result == 5
+
+
+def test_get_age_computes_days_from_epoch_string():
+    """A raw epoch string should be converted before computing age."""
+    five_days_ago = datetime.now(timezone.utc) - timedelta(days=5)
+    epoch_string = str(int(five_days_ago.timestamp()))
+
+    result = get_age(epoch_string)
+
+    assert result == 5
+
+
+def test_get_age_computes_days_from_epoch_int():
+    """A raw epoch int should be converted before computing age."""
+    five_days_ago = datetime.now(timezone.utc) - timedelta(days=5)
+    epoch_int = int(five_days_ago.timestamp())
+
+    result = get_age(epoch_int)
+
+    assert result == 5
+
+
+def test_get_age_returns_none_on_unparseable_timestamp():
+    """A malformed timestamp should return None."""
+    result = get_age("not-a-timestamp")
+
+    assert result is None
+
+
+def test_get_age_returns_none_on_none_input():
+    """Passing None directly should return None."""
+    result = get_age(None)
+
+    assert result is None
+
+
+# ---------------------------------------------------------------------------
+# --- build_feed_report ---
+# ---------------------------------------------------------------------------
+
+
+def test_build_feed_report_prints_message_when_no_results(capsys):
+    """An empty results list should print a clear message."""
+    build_feed_report([])
+    captured = capsys.readouterr()
+
+    assert "No results to display" in captured.out
+
+
+def test_build_feed_report_shows_unknown_status_and_na_fields(capsys):
+    """A feed with no resolved last_sync/volume should display 'N/A'."""
+    results = [
+        {
+            "feed_id": 1,
+            "feed_name": "CIRCL OSINT Feed",
+            "feed_url": "https://www.circl.lu/doc/misp/feed-osint",
+            "provider": "CIRCL",
+            "enabled": True,
+            "fixed_event": False,
+            "last_sync": None,
+            "volume": 803,
+            "status": "unknown",
+        }
+    ]
+
+    build_feed_report(results)
+    captured = capsys.readouterr()
+
+    assert "UNKNOWN" in captured.out
+    assert "N/A" in captured.out
+    assert "803" in captured.out
+    assert "CIRCL" in captured.out
+
+
+def test_build_feed_report_formats_last_sync_datetime(capsys):
+    """A resolved last_sync datetime should be formatted as a
+    readable UTC timestamp string."""
+    results = [
+        {
+            "feed_id": 3,
+            "feed_name": "Test Fixed Event Feed",
+            "feed_url": "https://example.com/feed",
+            "provider": "TestProvider",
+            "enabled": True,
+            "fixed_event": True,
+            "last_sync": datetime(2026, 7, 16, 22, 51, 25, tzinfo=timezone.utc),
+            "volume": None,
+            "status": "ok",
+        }
+    ]
+
+    build_feed_report(results)
+    captured = capsys.readouterr()
+
+    assert "2026-07-16 22:51:25 UTC" in captured.out
+    assert "OK" in captured.out
+
+
+def test_build_feed_report_shows_disabled_status(capsys):
+    """A disabled feed should render its status and enabled marker
+    consistently."""
+    results = [
+        {
+            "feed_id": 2,
+            "feed_name": "The Botvrij.eu Data",
+            "feed_url": "https://www.botvrij.eu/data/feed-osint",
+            "provider": "Botvrij.eu",
+            "enabled": False,
+            "fixed_event": False,
+            "last_sync": None,
+            "volume": None,
+            "status": "disabled",
+        }
+    ]
+
+    build_feed_report(results)
+    captured = capsys.readouterr()
+
+    assert "DISABLED" in captured.out
+    assert "✗" in captured.out

@@ -1,6 +1,8 @@
 import json
 from tabulate import tabulate
 from collections import Counter
+from datetime import datetime, timezone
+
 
 # ---------------------------------------------------------------------------
 # --- Enrichment type constants (ioc_enrich.py) ---
@@ -66,6 +68,28 @@ def extract_ioc_value(attribute_type, attribute_value):
     parts = attribute_value.split("|", 1)
     ioc_is_first = COMPOSITE_IOC_POSITION[attribute_type]
     return parts[0] if ioc_is_first else parts[1]
+
+
+def get_age(timestamp):
+    """Compute the age (in days) of a MISP epoch timestamp.
+
+    Args:
+        timestamp (str, int, or datetime): A MISP-style Unix epoch
+            timestamp, or an already-resolved datetime.
+
+    Returns:
+        int or None: Age in days, or None if timestamp could not be
+            parsed (caller must treat this as "unknown", not "ok").
+    """
+    if isinstance(timestamp, datetime):
+        dt = timestamp
+    else:
+        try:
+            dt = datetime.fromtimestamp(int(timestamp), tz=timezone.utc)
+        except (TypeError, ValueError):
+            return None
+
+    return (datetime.now(timezone.utc) - dt).days
 
 
 # ---------------------------------------------------------------------------
@@ -150,7 +174,7 @@ def format_output(summary, output_format):
         display["tlp"] = summary["tlp"] if summary["tlp"] else "Not set"
 
         rows = [[key, value] for key, value in display.items()]
-        print(tabulate(rows, headers=["Field", "Value"], tablefmt="github"))
+        print(tabulate(rows, headers=["Field", "Value"], tablefmt="rounded_grid"))
 
 
 # ---------------------------------------------------------------------------
@@ -381,3 +405,48 @@ def build_tree_output(event_id, event_info, enrichment_results, skipped_count, d
 
     if dry_run:
         print("[DRY-RUN] No changes written to MISP")
+
+
+# ---------------------------------------------------------------------------
+# --- Feed report formatting helpers (feed_health.py) ---
+# ---------------------------------------------------------------------------
+
+
+def build_feed_report(results):
+    """Render feed health results as a table.
+
+    Args:
+        results (list[dict]): Per-feed results, as returned by
+            feeds.build_result.
+
+    Returns:
+        None. Prints the formatted report directly to stdout.
+    """
+    if not results:
+        print("No results to display.")
+        return
+
+    columns = [
+        ("feed_name", "Feed Name", lambda v: v or "Unnamed"),
+        ("status", "Status", lambda v: v.upper() if v else "UNKNOWN"),
+        (
+            "last_sync",
+            "Last Sync",
+            lambda v: (
+                v.strftime("%Y-%m-%d %H:%M:%S UTC")
+                if isinstance(v, datetime)
+                else "N/A"
+            ),
+        ),
+        ("volume", "Matched Events (total)", lambda v: v if v is not None else "N/A"),
+        ("provider", "Provider", lambda v: v or ""),
+        ("feed_url", "Source URL", lambda v: v or ""),
+        ("enabled", "Enabled", lambda v: "✓" if v else "✗"),
+    ]
+
+    rows = []
+    for r in results:
+        row = {label: formatter(r.get(key)) for key, label, formatter in columns}
+        rows.append(row)
+
+    print(tabulate(rows, headers="keys", tablefmt="rounded_grid"))
