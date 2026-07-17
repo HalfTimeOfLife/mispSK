@@ -1,0 +1,83 @@
+<svg viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg" font-family="'JetBrains Mono','Courier New',monospace">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="42%" r="75%">
+      <stop offset="0%" stop-color="#141b26"/>
+      <stop offset="100%" stop-color="#0a0e14"/>
+    </radialGradient>
+    <radialGradient id="hubGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#22d3ee" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#22d3ee" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="soft" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000000" flood-opacity="0.6"/>
+    </filter>
+    <filter id="textShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="1" stdDeviation="2" flood-color="#000000" flood-opacity="0.8"/>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Header -->
+  <text x="600" y="66" text-anchor="middle" fill="#e6edf3" font-size="42" font-weight="700" letter-spacing="1" filter="url(#textShadow)">mispSK</text>
+
+  <!-- Hub glow -->
+  <circle cx="600" cy="365" r="230" fill="url(#hubGlow)"/>
+
+  <!-- Connector lines -->
+  <g stroke="#4a5a6a" stroke-width="2.5" stroke-opacity="0.8">
+    <line x1="600" y1="365" x2="600" y2="165"/>
+    <line x1="600" y1="365" x2="742" y2="216"/>
+    <line x1="600" y1="365" x2="796" y2="365"/>
+    <line x1="600" y1="365" x2="742" y2="514"/>
+    <line x1="600" y1="365" x2="600" y2="565"/>
+    <line x1="600" y1="365" x2="458" y2="514"/>
+    <line x1="600" y1="365" x2="404" y2="365"/>
+    <line x1="600" y1="365" x2="458" y2="216"/>
+  </g>
+
+  <!-- Central hub -->
+  <circle cx="600" cy="365" r="72" fill="#0d1520" stroke="#22d3ee" stroke-width="3" filter="url(#soft)"/>
+  <text x="600" y="357" text-anchor="middle" fill="#22d3ee" font-size="22" font-weight="700" filter="url(#textShadow)">MISP</text>
+  <text x="600" y="380" text-anchor="middle" fill="#5eead4" font-size="13" letter-spacing="1.5" filter="url(#textShadow)">instance</text>
+
+  <!-- 0: top -->
+  <circle cx="600" cy="165" r="55" fill="#0d1520" stroke="#5a6a7a" stroke-width="2.5" filter="url(#soft)"/>
+  <text x="600" y="158" text-anchor="middle" fill="#e6edf3" font-size="14" font-weight="600" filter="url(#textShadow)">event_</text>
+  <text x="600" y="178" text-anchor="middle" fill="#e6edf3" font-size="14" font-weight="600" filter="url(#textShadow)">search.py</text>
+
+  <!-- 1: top-right -->
+  <circle cx="742" cy="216" r="55" fill="#0d1520" stroke="#5a6a7a" stroke-width="2.5" filter="url(#soft)"/>
+  <text x="742" y="209" text-anchor="middle" fill="#e6edf3" font-size="14" font-weight="600" filter="url(#textShadow)">ioc_</text>
+  <text x="742" y="229" text-anchor="middle" fill="#e6edf3" font-size="14" font-weight="600" filter="url(#textShadow)">enrich.py</text>
+
+  <!-- 2: right -->
+  <circle cx="796" cy="365" r="55" fill="#0d1520" stroke="#5a6a7a" stroke-width="2.5" filter="url(#soft)"/>
+  <text x="796" y="358" text-anchor="middle" fill="#e6edf3" font-size="14" font-weight="600" filter="url(#textShadow)">feed_</text>
+  <text x="796" y="378" text-anchor="middle" fill="#e6edf3" font-size="14" font-weight="600" filter="url(#textShadow)">health.py</text>
+
+  <!-- 3: bottom-right -->
+  <circle cx="742" cy="514" r="55" fill="#0d1520" stroke="#5a6a7a" stroke-width="2.5" filter="url(#soft)"/>
+  <text x="742" y="507" text-anchor="middle" fill="#e6edf3" font-size="14" font-weight="600" filter="url(#textShadow)">export_</text>
+  <text x="742" y="527" text-anchor="middle" fill="#e6edf3" font-size="14" font-weight="600" filter="url(#textShadow)">attack.py</text>
+
+  <!-- 4: bottom -->
+  <circle cx="600" cy="565" r="55" fill="#0d1520" stroke="#5a6a7a" stroke-width="2.5" filter="url(#soft)"/>
+  <text x="600" y="558" text-anchor="middle" fill="#e6edf3" font-size="14" font-weight="600" filter="url(#textShadow)">event_</text>
+  <text x="600" y="578" text-anchor="middle" fill="#e6edf3" font-size="14" font-weight="600" filter="url(#textShadow)">import.py</text>
+
+  <!-- 5: bottom-left -->
+  <circle cx="458" cy="514" r="55" fill="#0d1520" stroke="#5a6a7a" stroke-width="2.5" filter="url(#soft)"/>
+  <text x="458" y="507" text-anchor="middle" fill="#e6edf3" font-size="14" font-weight="600" filter="url(#textShadow)">export_</text>
+  <text x="458" y="527" text-anchor="middle" fill="#e6edf3" font-size="14" font-weight="600" filter="url(#textShadow)">yara.py</text>
+
+  <!-- 6: left -->
+  <circle cx="404" cy="365" r="55" fill="#0d1520" stroke="#5a6a7a" stroke-width="2.5" filter="url(#soft)"/>
+  <text x="404" y="358" text-anchor="middle" fill="#e6edf3" font-size="14" font-weight="600" filter="url(#textShadow)">taxonomy_</text>
+  <text x="404" y="378" text-anchor="middle" fill="#e6edf3" font-size="14" font-weight="600" filter="url(#textShadow)">check.py</text>
+
+  <!-- 7: top-left -->
+  <circle cx="458" cy="216" r="55" fill="#0d1520" stroke="#5a6a7a" stroke-width="2.5" filter="url(#soft)"/>
+  <text x="458" y="209" text-anchor="middle" fill="#e6edf3" font-size="14" font-weight="600" filter="url(#textShadow)">export_</text>
+  <text x="458" y="229" text-anchor="middle" fill="#e6edf3" font-size="14" font-weight="600" filter="url(#textShadow)">splunk.py</text>
+</svg>

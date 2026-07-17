@@ -5,12 +5,14 @@ A collection of Python scripts automating operations on MISP instances (via PyMI
 ---
 
 ## Scripts
+
+![mispSK icon](./mispsk_icon.svg)
  
 | Script | Description | Status |
 |---|---|---|
 | `event_search.py` | Fast event/IOC lookup and summary | UP |
 | `ioc_enrich.py` | Hash/IP enrichment (VirusTotal, AbuseIPDB) | UP |
-| `feed_health.py` | Feed sync/freshness check | Planned |
+| `feed_health.py` | Feed sync/freshness check | UP |
 | `export_attack_layer.py` | Export to ATT&CK Navigator layer JSON | Planned |
 | `export_splunk.py` | Export to Splunk-ingestible format | Planned |
 | `export_yara.py` | Generate YARA rules from attributes | Planned |
@@ -30,9 +32,11 @@ mispSK/
 │   ├── client.py
 │   ├── enrichers.py
 │   ├── enrichment.py
+│   ├── feeds.py
 │   └── utils.py
 ├── scripts
 │   ├── event_search.py
+│   ├── feed_health.py
 │   └── ioc_enrich.py
 ├── tests
 │   ├── conftest.py
@@ -46,7 +50,9 @@ mispSK/
 ├── LICENSE
 ├── README.md
 ├── ROADMAP.md
+├── mispsk_icon.svg
 ├── pyproject.toml
+├── requirements-dev.txt
 └── requirements.txt
 ```
 
@@ -149,6 +155,22 @@ python scripts/ioc_enrich.py --id 1234 --max-age-days 30
 > Requires at least one of `VT_API_KEY` or `ABUSEIPDB_API_KEY` to be set in `.env`. If only one is configured, the corresponding attribute type (hashes or IPs) is skipped with a warning.
 
 > Composite attribute types are also supported: `filename|md5`, `filename|sha1`, `filename|sha256`, `ip-src|port`, and `ip-dst|port`. The hash/IP portion is automatically extracted for lookup, while the full value is still shown in the output.
+
+### feed_health.py
+
+#### Check feed sync status
+
+```bash
+python scripts/feed_health.py
+```
+
+#### Adjust the staleness threshold
+
+```bash
+python scripts/feed_health.py --max-age-days 7
+```
+
+> Sync freshness is only determinable for `fixed_event` feeds - MISP exposes no reliable last-fetch signal for other feed types. Those are reported with status `unknown`, alongside a total count of matched events (matched by provider, not time-windowed).
 
 ---
 

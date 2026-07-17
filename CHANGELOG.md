@@ -45,8 +45,8 @@ All notable changes to mispSK are documented here. Format follows [Keep a Change
 ## [0.2.1] - 2026-07-15
 
 ### Fixed
-- `mispsk/utils.py`: corrected composite attribute handling (`filename|md5`, `ip-src|port`, etc.) — hash/IP value is now extracted from the correct segment (position varies by type), fixing a bug where port numbers were sent to AbuseIPDB as IP addresses (422 errors)
-- `mispsk/enrichment.py`: comment and tag updates are now independent — a changed comment no longer forces an unnecessary tag re-application, and vice versa
+- `mispsk/utils.py`: corrected composite attribute handling (`filename|md5`, `ip-src|port`, etc.) - hash/IP value is now extracted from the correct segment (position varies by type), fixing a bug where port numbers were sent to AbuseIPDB as IP addresses (422 errors)
+- `mispsk/enrichment.py`: comment and tag updates are now independent - a changed comment no longer forces an unnecessary tag re-application, and vice versa
 - `mispsk/enrichment.py`: unexpected HTTP errors (5xx) from VirusTotal/AbuseIPDB now stop enrichment gracefully instead of raising an unhandled traceback
 - `mispsk/client.py`: connection error message translated to English for consistency
 
@@ -56,3 +56,19 @@ All notable changes to mispSK are documented here. Format follows [Keep a Change
 - Test coverage for composite attribute extraction and caching
 
 ---
+
+## [0.3] - 2026-07-17
+
+### Added
+- `feed_health.py`: reports sync status and matched event volume per configured MISP feed
+- `mispsk/feeds.py`: `resolve_last_sync`, `resolve_recent_volume`, `build_result`
+- `mispsk/utils.py`: `get_age`, `build_feed_report`
+- `--max-age-days` flag to control the staleness threshold for `fixed_event` feeds
+
+### Changed
+- `event_search.py`: table output now uses `rounded_grid` formatting for visual consistency with `feed_health.py`
+
+### Known limitation
+- Sync freshness (`last_sync`) is only resolvable for `fixed_event` feeds. For all other feeds (`misp`/`csv`/`freetext` without a reused event), MISP exposes no reliable "last successful fetch" signal via PyMISP:
+  - `event.timestamp` reflects the source's original publish date
+  - `search_logs()` does not journal feed fetches
