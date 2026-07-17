@@ -14,7 +14,6 @@ from mispsk.utils import (
 
 
 def enrich_event(event, vt_enricher, abuseipdb_enricher, max_age_days, dry_run, misp):
-
     enrichment_results = {}
     cache = {}
     skipped_count = 0
