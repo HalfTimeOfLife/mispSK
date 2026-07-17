@@ -28,7 +28,9 @@ def enrich_event(event, vt_enricher, abuseipdb_enricher, max_age_days, dry_run, 
             source = "vt"
             if vt_enricher is None:
                 if not vt_warning_shown:
-                    print("⚠️  VT_API_KEY missing: hash attributes will be skipped")
+                    print(
+                        "Warning: VT_API_KEY missing: hash attributes will be skipped"
+                    )
                     vt_warning_shown = True
                 skipped_count += 1
                 continue
@@ -36,7 +38,9 @@ def enrich_event(event, vt_enricher, abuseipdb_enricher, max_age_days, dry_run, 
             source = "abuseipdb"
             if abuseipdb_enricher is None:
                 if not abuseipdb_warning_shown:
-                    print("⚠️  ABUSEIPDB_API_KEY missing: IP attributes will be skipped")
+                    print(
+                        "Warning: ABUSEIPDB_API_KEY missing: IP attributes will be skipped"
+                    )
                     abuseipdb_warning_shown = True
                 skipped_count += 1
                 continue
@@ -58,11 +62,11 @@ def enrich_event(event, vt_enricher, abuseipdb_enricher, max_age_days, dry_run, 
                     result = abuseipdb_enricher.lookup_ip(ioc_value, max_age_days)
                 cache[key] = result
             except RuntimeError as e:
-                print(f"⚠ {e} - stopping enrichment")
+                print(f"Warning: {e} - stopping enrichment")
                 stopped_early = True
                 break
             except requests.HTTPError as e:
-                print(f"⚠ API error ({e}) - stopping enrichment")
+                print(f"Warning: API error ({e}) - stopping enrichment")
                 stopped_early = True
                 break
 
