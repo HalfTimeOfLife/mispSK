@@ -92,6 +92,23 @@ def get_age(timestamp):
     return (datetime.now(timezone.utc) - dt).days
 
 
+def get_attack_tags(event):
+    """Extract MITRE ATT&CK cluster values attached to a MISP event.
+
+    Args:
+        event (MISPEvent): The event to inspect.
+
+    Returns:
+        list[str]: A list of ATT&CK cluster values.
+    """
+    tags = []
+    for galaxy in event.Galaxy:
+        if galaxy.namespace == "mitre-attack":
+            for cluster in galaxy.GalaxyCluster:
+                tags.append(cluster.value)
+    return tags
+
+
 # ---------------------------------------------------------------------------
 # --- Event summary helpers (event_search.py) ---
 # ---------------------------------------------------------------------------
@@ -112,23 +129,6 @@ def _get_tlp(event):
     return None
 
 
-def _get_attack_tags(event):
-    """Extract MITRE ATT&CK cluster values attached to a MISP event.
-
-    Args:
-        event (MISPEvent): The event to inspect.
-
-    Returns:
-        list[str]: A list of ATT&CK cluster values.
-    """
-    tags = []
-    for galaxy in event.Galaxy:
-        if galaxy.namespace == "mitre-attack":
-            for cluster in galaxy.GalaxyCluster:
-                tags.append(cluster.value)
-    return tags
-
-
 def extract_summary(event):
     """Build a readable summary of key fields from a MISP event.
 
@@ -146,7 +146,7 @@ def extract_summary(event):
     summary["attribute_types"] = dict(Counter(attr.type for attr in event.Attribute))
     summary["org"] = event.Orgc.name
     summary["tlp"] = _get_tlp(event)
-    summary["attack_tags"] = _get_attack_tags(event)
+    summary["attack_tags"] = get_attack_tags(event)
     return summary
 
 

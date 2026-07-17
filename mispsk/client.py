@@ -84,6 +84,26 @@ class MispClient:
             return None
         return event
 
+    def get_events_by_ids(self, event_ids):
+        """Fetch multiple MISP events by their IDs, skipping any IDs that
+        aren't found (with a warning) instead of failing the whole run.
+
+        Args:
+            event_ids (list[int]): List of event IDs to fetch.
+
+        Returns:
+            list[MISPEvent]: The events found (invalid IDs are skipped).
+
+        """
+        events = []
+        for eid in event_ids:
+            event = self.get_event_by_id(eid)
+            if event is None:
+                print(f"Warning: Event {eid} not found, skipping")
+                continue
+            events.append(event)
+        return events
+
     def get_events_by_ioc(self, ioc_value):
         """Search for MISP events containing a given IOC value.
 
