@@ -1,8 +1,13 @@
 import argparse
 
 from mispsk.client import MispClient
-from mispsk.feeds import resolve_last_sync, resolve_recent_volume, build_result
-from mispsk.utils import build_feed_report, get_age
+from mispsk.feeds import (
+    resolve_last_sync,
+    resolve_recent_volume,
+    build_result,
+    build_feed_report,
+)
+from mispsk.dates import get_age
 
 
 def main():

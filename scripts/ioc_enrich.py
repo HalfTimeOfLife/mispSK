@@ -3,8 +3,7 @@ import sys
 
 from mispsk.client import MispClient
 from mispsk.enrichers import VTEnricher, AbuseIPDBEnricher
-from mispsk.utils import build_tree_output
-from mispsk.enrichment import enrich_event
+from mispsk.enrichment import enrich_event, build_tree_output
 
 
 def main():
