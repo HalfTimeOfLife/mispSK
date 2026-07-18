@@ -341,3 +341,29 @@ def test_build_feed_report_shows_disabled_status(capsys):
 
     assert "DISABLED" in captured.out
     assert "✗" in captured.out
+
+
+def test_build_feed_report_wraps_long_source_url(capsys):
+    """A Source URL longer than the max column width should be wrapped
+    onto multiple lines within the same cell"""
+    long_url = "https://example.com/" + "a" * 80
+
+    results = [
+        {
+            "feed_id": 1,
+            "feed_name": "Long URL Feed",
+            "feed_url": long_url,
+            "provider": "TestProvider",
+            "enabled": True,
+            "fixed_event": False,
+            "last_sync": None,
+            "volume": None,
+            "status": "ok",
+        }
+    ]
+
+    build_feed_report(results)
+    captured = capsys.readouterr()
+
+    assert long_url not in captured.out
+    assert "a" * 40 in captured.out

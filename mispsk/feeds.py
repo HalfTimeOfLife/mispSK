@@ -15,11 +15,16 @@ def resolve_last_sync(feed, misp):
     Returns:
         datetime or None: Last sync time, or None if not resolvable.
     """
-    if not (getattr(feed, "fixed_event", False) and getattr(feed, "event_id", None)):
+    fixed_event = getattr(feed, "fixed_event", False)
+    event_id = getattr(feed, "event_id", None)
+
+    # MISP normalizes an absent/never-populated event_id to the string
+    # "0" rather than None.
+    if not fixed_event or not event_id or str(event_id) == "0":
         return None
 
     try:
-        event = misp.get_event(feed.event_id, pythonify=True)
+        event = misp.get_event(event_id, pythonify=True)
     except Exception:
         return None
 
@@ -121,4 +126,13 @@ def build_feed_report(results):
         row = {label: formatter(r.get(key)) for key, label, formatter in columns}
         rows.append(row)
 
-    print(tabulate(rows, headers="keys", tablefmt="rounded_grid"))
+    max_col_widths = [None, None, None, None, None, 50, None]
+
+    print(
+        tabulate(
+            rows,
+            headers="keys",
+            tablefmt="rounded_grid",
+            maxcolwidths=max_col_widths,
+        )
+    )
