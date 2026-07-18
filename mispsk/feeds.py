@@ -1,10 +1,5 @@
-"""Feed health resolution logic (feed_health.py).
-
-Handles last-sync resolution, event volume counting, and per-feed
-result construction.
-"""
-
 from datetime import datetime, timezone
+from tabulate import tabulate
 
 
 def resolve_last_sync(feed, misp):
@@ -87,3 +82,43 @@ def build_result(feed, last_sync=None, volume=None, status="unknown"):
         "volume": volume,
         "status": status,
     }
+
+
+def build_feed_report(results):
+    """Render feed health results as a table.
+
+    Args:
+        results (list[dict]): Per-feed results, as returned by
+            feeds.build_result.
+
+    Returns:
+        None. Prints the formatted report directly to stdout.
+    """
+    if not results:
+        print("No results to display.")
+        return
+
+    columns = [
+        ("feed_name", "Feed Name", lambda v: v or "Unnamed"),
+        ("status", "Status", lambda v: v.upper() if v else "UNKNOWN"),
+        (
+            "last_sync",
+            "Last Sync",
+            lambda v: (
+                v.strftime("%Y-%m-%d %H:%M:%S UTC")
+                if isinstance(v, datetime)
+                else "N/A"
+            ),
+        ),
+        ("volume", "Matched Events (total)", lambda v: v if v is not None else "N/A"),
+        ("provider", "Provider", lambda v: v or ""),
+        ("feed_url", "Source URL", lambda v: v or ""),
+        ("enabled", "Enabled", lambda v: "✓" if v else "✗"),
+    ]
+
+    rows = []
+    for r in results:
+        row = {label: formatter(r.get(key)) for key, label, formatter in columns}
+        rows.append(row)
+
+    print(tabulate(rows, headers="keys", tablefmt="rounded_grid"))
