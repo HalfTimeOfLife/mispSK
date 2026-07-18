@@ -6,7 +6,7 @@ A collection of Python scripts automating operations on MISP instances (via PyMI
 
 ## Scripts
 
-![mispSK icon](./mispsk_icon.svg)
+![mispSK icon](./assets/mispsk_icon.svg)
  
 | Script | Description | Status |
 |---|---|---|

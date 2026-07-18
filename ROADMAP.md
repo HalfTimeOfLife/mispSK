@@ -2,10 +2,15 @@
 
 ---
 
-## v0.5 - Splunk & YARA Export
-- `export_splunk.py`: exports attributes to a Splunk-ingestible CSV/CIM format
+## v0.5.1 - YARA Export
 - `export_yara.py`: generates YARA rules from filename/pattern-type attributes
-- Shipped together as they share the same export/filter core
+- `mispsk/export_common.py`: shared export/filter core, designed for reuse by export_splunk.py (v0.5.2)
+
+---
+
+## v0.5.2 - Splunk Export
+- `export_splunk.py`: exports attributes to a Splunk-ingestible CSV/CIM format
+- Reuses `export_common.py` introduced in v0.5.1
 
 ---
 
@@ -37,7 +42,8 @@
 | v0.2 | `ioc_enrich.py` | Shipped |
 | v0.3 | `feed_health.py` | Shipped |
 | v0.4 | `export_attack_layer.py` | Shipped |
-| v0.5 | `export_splunk.py`, `export_yara.py` | Planned |
+| v0.5.1 | `export_yara.py` | Planned |
+| v0.5.2 | `export_splunk.py` | Planned |
 | v0.6 | `taxonomy_check.py` | Planned |
 | v0.7 | `event_import.py` | Planned |
 | v1.0 | Consolidation | Planned |
