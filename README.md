@@ -42,7 +42,6 @@ mispSK/
 ├── scripts
 │   ├── event_search.py
 │   ├── export_attack_layer.py
-│   ├── export_yara.py
 │   ├── feed_health.py
 │   └── ioc_enrich.py
 ├── tests
@@ -61,7 +60,6 @@ mispSK/
 ├── LICENSE
 ├── README.md
 ├── ROADMAP.md
-├── layer_test.json
 ├── pyproject.toml
 ├── requirements-dev.txt
 └── requirements.txt
