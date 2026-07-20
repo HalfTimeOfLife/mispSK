@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mispsk"
-version = "0.4.0"
+version = "0.5.1"
 description = "MISP Script Kit"
 readme = "README.md"
 license = { text = "MIT" }
